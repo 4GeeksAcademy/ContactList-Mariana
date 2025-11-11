@@ -1,0 +1,135 @@
+body {
+  background-color: #f4f6f8;
+  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  transition: all 0.25s ease-in-out;
+  background-color: #fff;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.btn {
+  border-radius: 10px !important;
+  font-weight: 500;
+}
+
+form {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.modal-content {
+  border-radius: 14px;
+}
+
+.modal-header {
+  border-bottom: none;
+  background: #dc3545;
+}
+
+.btn-outline-primary,
+.btn-outline-danger {
+  border-width: 2px;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0d6efd;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.contact-card {
+  transition: all 0.25s ease;
+  background-color: #ffffff;
+}
+
+.contact-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.contact-card img {
+  object-fit: cover;
+  background-color: #f8f9fa;
+}
+
+.btn-sm {
+  border-radius: 8px !important;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  transition: all 0.3s ease;
+}
+
+.btn-sm i {
+  font-size: 0.9rem;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.btn-danger:hover {
+  background-color: #b02a37;
+  transform: translateY(-2px);
+}
+
+.contact-card {
+  transition: all 0.25s ease;
+  background-color: #ffffff;
+}
+
+.contact-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.contact-card img {
+  object-fit: cover;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px solid #dee2e6;
+  background-color: #fff;
+}
+
+.btn-sm {
+  border-radius: 8px !important;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  transition: all 0.3s ease;
+}
+
+.btn-sm i {
+  font-size: 0.9rem;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.btn-danger:hover {
+  background-color: #b02a37;
+  transform: translateY(-2px);
+}
