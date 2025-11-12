@@ -6,67 +6,61 @@ const ContactCard = ({ contact }) => {
   const { confirmDelete } = useContext(Context);
   const navigate = useNavigate();
 
-  // Imagen fija realista
-  const defaultImage =
-    contact.image || "https://randomuser.me/api/portraits/women/68.jpg";
-
-  const handleEdit = () => {
-    console.log("Editar → id:", contact?.id);
-    if (!contact?.id) return alert("Este contacto no tiene id.");
+  const onEdit = (e) => {
+    e.preventDefault();
+    console.log("🧭 Edit click | id =", contact?.id, contact);
+    if (!contact?.id && contact?.id !== 0) {
+      alert("Este contacto no tiene ID válido (no se puede editar). Revisa la consola.");
+      return;
+    }
     navigate(`/edit/${contact.id}`);
   };
 
-  const handleDelete = () => {
-    console.log("Eliminar → id:", contact?.id);
-    if (!contact?.id) return alert("Este contacto no tiene id.");
-    if (typeof confirmDelete !== "function") {
-      return alert("confirmDelete no está disponible en el Context.");
+  const onDelete = (e) => {
+    e.preventDefault();
+    console.log("🧺 Delete click | id =", contact?.id, contact);
+    if (!contact?.id && contact?.id !== 0) {
+      alert("Este contacto no tiene ID válido (no se puede eliminar). Revisa la consola.");
+      return;
     }
     confirmDelete(contact.id);
   };
 
   return (
-    <div className="card contact-card shadow-sm mb-3 p-3 d-flex flex-row align-items-center border-0 rounded-3">
-      <img
-        src={defaultImage}
-        alt={contact?.name || "Contacto"}
-        className="rounded-circle me-3 border"
-        width="90"
-        height="90"
-      />
+    <div className="card mb-3 shadow-sm" style={{ maxWidth: "700px" }}>
+      <div className="card-body d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center">
+          <img
+            src="https://randomuser.me/api/portraits/women/44.jpg"
+            alt="Contacto"
+            className="rounded-circle me-3"
+            style={{ width: "70px", height: "70px", objectFit: "cover" }}
+          />
+          <div>
+            <div className="small text-muted">ID: {String(contact?.id ?? "—")}</div>
+            <h5 className="mb-1">{contact.name}</h5>
+            <p className="mb-0"><i className="fas fa-envelope me-2" />{contact.email}</p>
+            <p className="mb-0"><i className="fas fa-phone me-2" />{contact.phone}</p>
+            <p className="mb-0"><i className="fas fa-map-marker-alt me-2" />{contact.address}</p>
+          </div>
+        </div>
 
-      <div className="flex-grow-1">
-        <h5 className="fw-semibold mb-1">{contact?.name || "(Sin nombre)"}</h5>
-        <p className="mb-1 text-muted">
-          <i className="fa fa-map-marker-alt me-2 text-danger"></i>
-          {contact?.address || "—"}
-        </p>
-        <p className="mb-1 text-muted">
-          <i className="fa fa-phone me-2 text-success"></i>
-          {contact?.phone || "—"}
-        </p>
-        <p className="mb-0 text-muted">
-          <i className="fa fa-envelope me-2 text-primary"></i>
-          {contact?.email || "—"}
-        </p>
-      </div>
-
-      <div className="ms-auto d-flex flex-column gap-2">
-        <button
-          type="button"
-          className="btn btn-primary btn-sm fw-semibold d-flex align-items-center justify-content-center gap-2"
-          onClick={handleEdit}
-        >
-          <i className="fa fa-pen"></i> Editar
-        </button>
-
-        <button
-          type="button"
-          className="btn btn-danger btn-sm fw-semibold d-flex align-items-center justify-content-center gap-2"
-          onClick={handleDelete}
-        >
-          <i className="fa fa-trash"></i> Eliminar
-        </button>
+        <div className="d-flex flex-column align-items-end">
+          <button
+            type="button"
+            className="btn btn-outline-primary btn-sm mb-2"
+            onClick={onEdit}
+          >
+            ✏️ Editar
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline-danger btn-sm"
+            onClick={onDelete}
+          >
+            🗑️ Eliminar
+          </button>
+        </div>
       </div>
     </div>
   );

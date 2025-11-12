@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -6,8 +6,9 @@ const AddContact = () => {
   const { addContact, updateContact, contacts } = useContext(Context);
   const navigate = useNavigate();
   const { id } = useParams();
+  const editing = !!id;
 
-  const [form, setForm] = useState({
+  const [contact, setContact] = useState({
     name: "",
     email: "",
     phone: "",
@@ -15,79 +16,59 @@ const AddContact = () => {
   });
 
   useEffect(() => {
-    if (id) {
-      const contact = contacts.find((c) => c.id === parseInt(id));
-      if (contact) setForm(contact);
+    if (editing) {
+      const found = contacts.find((c) => c.id === parseInt(id));
+      if (found) setContact(found);
     }
   }, [id, contacts]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setContact({ ...contact, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (id) {
-      updateContact(id, form);
-    } else {
-      addContact(form);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9\-+()\s]{7,20}$/;
+
+    if (!emailRegex.test(contact.email)) {
+      alert("Por favor, ingresa un correo válido.");
+      return;
     }
+    if (!phoneRegex.test(contact.phone)) {
+      alert("Por favor, ingresa un número de teléfono válido.");
+      return;
+    }
+
+    if (editing) await updateContact(id, contact);
+    else await addContact(contact);
     navigate("/");
   };
 
   return (
-    <div className="container mt-4">
-      <h2 className="fw-bold">{id ? "Editar Contacto" : "Agregar Contacto"}</h2>
-      <form onSubmit={handleSubmit} className="mt-3">
-        <div className="mb-3">
-          <label className="form-label">Nombre completo</label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Correo electrónico</label>
-          <input
-            type="email"
-            className="form-control"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Teléfono</label>
-          <input
-            type="text"
-            className="form-control"
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Dirección</label>
-          <input
-            type="text"
-            className="form-control"
-            name="address"
-            value={form.address}
-            onChange={handleChange}
-          />
-        </div>
-
+    <div className="container py-4">
+      <h2 className="mb-4 text-center">{editing ? "Editar Contacto" : "Añadir Contacto"}</h2>
+      <form
+        className="mx-auto"
+        style={{ maxWidth: "600px" }}
+        onSubmit={handleSubmit}
+      >
+        {["name", "email", "phone", "address"].map((field) => (
+          <div className="mb-3" key={field}>
+            <label className="form-label text-capitalize">{field}</label>
+            <input
+              type={field === "email" ? "email" : "text"}
+              name={field}
+              className="form-control"
+              value={contact[field]}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        ))}
         <div className="d-flex justify-content-between">
-          <button type="submit" className="btn btn-primary">
-            {id ? "Guardar Cambios" : "Agregar"}
+          <button type="submit" className="btn btn-success">
+            {editing ? "Guardar Cambios" : "Añadir Contacto"}
           </button>
           <button
             type="button"
