@@ -1,33 +1,63 @@
+/* 🌙 DARK MODE GLOBAL */
 body {
-  background-color: #f7f9fb;
+  background: #0d1117 !important;
+  color: #e6edf3 !important;
   font-family: "Inter", sans-serif;
 }
 
-.container {
-  max-width: 850px;
+/* 🔍 Inputs */
+input,
+.form-control {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  color: #e6edf3 !important;
 }
 
-.card {
-  border: none;
+input::placeholder {
+  color: #7d8590 !important;
+}
+
+/* 📦 Card estilo moderno */
+.dark-card {
+  background: rgba(22, 27, 34, 0.85) !important;
+  border: 1px solid #30363d !important;
   border-radius: 15px;
-  transition: all 0.2s ease-in-out;
+  padding: 20px;
+  backdrop-filter: blur(6px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card:hover {
+.dark-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 20px rgba(0, 200, 255, 0.1);
 }
 
-.btn {
-  border-radius: 10px;
-  font-weight: 500;
+/* 🖼 Avatar redondo */
+.avatar-lg {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #58a6ff;
 }
 
-h2, h5 {
-  color: #333;
+/* 🔘 Botones */
+.btn-dark-primary {
+  background: #238636 !important;
+  border: none;
 }
 
-.toast {
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.btn-dark-secondary {
+  background: #30363d !important;
+  border: none;
+}
+
+/* ⭐ Iconos */
+.icon {
+  color: #58a6ff !important;
+}
+
+/* 🧹 separadores */
+hr {
+  border-color: #21262d;
 }

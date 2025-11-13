@@ -1,9 +1,10 @@
+// src/pages/AddContact.jsx
 import React, { useContext, useState, useEffect } from "react";
-import { Context } from "../store.jsx";
+import { Context } from "../store/appContext.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 
 const AddContact = () => {
-  const { addContact, updateContact, contacts } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const navigate = useNavigate();
   const { id } = useParams();
   const editing = !!id;
@@ -16,63 +17,65 @@ const AddContact = () => {
   });
 
   useEffect(() => {
-    if (editing) {
-      const found = contacts.find((c) => c.id === parseInt(id));
+    if (editing && store.contacts.length > 0) {
+      const found = store.contacts.find((c) => c.id === parseInt(id));
       if (found) setContact(found);
     }
-  }, [id, contacts]);
+  }, [id, store.contacts]);
 
   const handleChange = (e) => {
     setContact({ ...contact, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9\-+()\s]{7,20}$/;
 
-    if (!emailRegex.test(contact.email)) {
-      alert("Por favor, ingresa un correo válido.");
-      return;
-    }
-    if (!phoneRegex.test(contact.phone)) {
-      alert("Por favor, ingresa un número de teléfono válido.");
-      return;
+    if (editing) {
+      actions.updateContact(id, contact);
+    } else {
+      actions.addContact(contact);
     }
 
-    if (editing) await updateContact(id, contact);
-    else await addContact(contact);
     navigate("/");
   };
 
   return (
-    <div className="container py-4">
-      <h2 className="mb-4 text-center">{editing ? "Editar Contacto" : "Añadir Contacto"}</h2>
+    <div className="container py-4 text-light">
+
+      <h2 className="text-center mb-4">
+        {editing ? "✏️ Editar Contacto" : "➕ Añadir Contacto"}
+      </h2>
+
       <form
-        className="mx-auto"
+        className="mx-auto p-4 rounded shadow-lg bg-dark"
         style={{ maxWidth: "600px" }}
         onSubmit={handleSubmit}
       >
         {["name", "email", "phone", "address"].map((field) => (
           <div className="mb-3" key={field}>
-            <label className="form-label text-capitalize">{field}</label>
+            <label className="form-label text-capitalize text-secondary">
+              {field}
+            </label>
+
             <input
-              type={field === "email" ? "email" : "text"}
+              type="text"
               name={field}
-              className="form-control"
+              className="form-control bg-secondary text-light border-0"
               value={contact[field]}
               onChange={handleChange}
               required
             />
           </div>
         ))}
-        <div className="d-flex justify-content-between">
-          <button type="submit" className="btn btn-success">
-            {editing ? "Guardar Cambios" : "Añadir Contacto"}
+
+        <div className="d-flex justify-content-between mt-3">
+          <button type="submit" className="btn btn-primary px-4">
+            {editing ? "Guardar Cambios" : "Crear Contacto"}
           </button>
+
           <button
             type="button"
-            className="btn btn-secondary"
+            className="btn btn-outline-light px-4"
             onClick={() => navigate("/")}
           >
             Cancelar

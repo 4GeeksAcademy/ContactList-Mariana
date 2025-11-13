@@ -1,62 +1,43 @@
 import React, { useContext } from "react";
-import { Context } from "../store.jsx";
+import { Context } from "../store/appContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 const ContactCard = ({ contact }) => {
-  const { confirmDelete } = useContext(Context);
+  const { actions } = useContext(Context);
   const navigate = useNavigate();
 
-  const onEdit = (e) => {
-    e.preventDefault();
-    console.log("🧭 Edit click | id =", contact?.id, contact);
-    if (!contact?.id && contact?.id !== 0) {
-      alert("Este contacto no tiene ID válido (no se puede editar). Revisa la consola.");
-      return;
-    }
-    navigate(`/edit/${contact.id}`);
-  };
-
-  const onDelete = (e) => {
-    e.preventDefault();
-    console.log("🧺 Delete click | id =", contact?.id, contact);
-    if (!contact?.id && contact?.id !== 0) {
-      alert("Este contacto no tiene ID válido (no se puede eliminar). Revisa la consola.");
-      return;
-    }
-    confirmDelete(contact.id);
-  };
-
   return (
-    <div className="card mb-3 shadow-sm" style={{ maxWidth: "700px" }}>
-      <div className="card-body d-flex align-items-center justify-content-between">
-        <div className="d-flex align-items-center">
+    <div className="dark-card mb-4">
+      <div className="d-flex align-items-center justify-content-between">
+
+        {/* FOTO + INFO */}
+        <div className="d-flex align-items-center gap-3">
           <img
-            src="https://randomuser.me/api/portraits/women/44.jpg"
-            alt="Contacto"
-            className="rounded-circle me-3"
-            style={{ width: "70px", height: "70px", objectFit: "cover" }}
+            src={`https://randomuser.me/api/portraits/women/${contact.id % 99}.jpg`}
+            alt="Avatar"
+            className="avatar-lg"
           />
+
           <div>
-            <div className="small text-muted">ID: {String(contact?.id ?? "—")}</div>
-            <h5 className="mb-1">{contact.name}</h5>
-            <p className="mb-0"><i className="fas fa-envelope me-2" />{contact.email}</p>
-            <p className="mb-0"><i className="fas fa-phone me-2" />{contact.phone}</p>
-            <p className="mb-0"><i className="fas fa-map-marker-alt me-2" />{contact.address}</p>
+            <h5 className="mb-1 fw-bold">{contact.name}</h5>
+            <p className="mb-0 icon"><i className="fas fa-envelope me-2"></i>{contact.email}</p>
+            <p className="mb-0 icon"><i className="fas fa-phone me-2"></i>{contact.phone}</p>
+            <p className="mb-0 icon"><i className="fas fa-map-marker-alt me-2"></i>{contact.address}</p>
           </div>
         </div>
 
-        <div className="d-flex flex-column align-items-end">
+        {/* BOTONES */}
+        <div className="d-flex flex-column gap-2">
           <button
-            type="button"
-            className="btn btn-outline-primary btn-sm mb-2"
-            onClick={onEdit}
+            className="btn btn-outline-info btn-sm"
+            onClick={() => navigate(`/edit/${contact.id}`)}
           >
             ✏️ Editar
           </button>
+
           <button
-            type="button"
             className="btn btn-outline-danger btn-sm"
-            onClick={onDelete}
+            onClick={() => actions.deleteContact(contact.id)}
           >
             🗑️ Eliminar
           </button>

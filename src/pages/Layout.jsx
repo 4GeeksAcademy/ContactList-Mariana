@@ -1,8 +1,22 @@
 import React from "react";
-import RoutesComponent from "../routes.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-const LayoutWrapper = () => {
-  return <RoutesComponent />;
+import Layout from "./pages/Layout.jsx";
+import Contacts from "./pages/Contacts.jsx";
+import AddContact from "./pages/AddContact.jsx";
+
+const AppRoutes = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Contacts />} />
+          <Route path="/add" element={<AddContact />} />
+          <Route path="/edit/:id" element={<AddContact />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
-export default LayoutWrapper;
+export default AppRoutes;

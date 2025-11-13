@@ -1,7 +1,9 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import Layout from "./pages/Layout.jsx";
+import { createRoot } from "react-dom/client";
+import AppContext from "./store/appContext.jsx";
+import Layout from "./routes.jsx";
 import "./index.css";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<Layout />);
+const App = AppContext(Layout);
+
+createRoot(document.getElementById("root")).render(<App />);

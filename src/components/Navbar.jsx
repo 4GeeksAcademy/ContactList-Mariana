@@ -1,15 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Navbar = () => (
-  <nav className="navbar navbar-light bg-light mb-3">
-    <div className="container">
-      <Link to="/" className="navbar-brand">
-        📒 Contact Manager
-      </Link>
-      <Link to="/add" className="btn btn-success">Add Contact</Link>
-    </div>
-  </nav>
-);
+const Navbar = () => {
+  const navigate = useNavigate();
+
+  return (
+    <nav className="navbar navbar-dark bg-dark px-4 mb-4">
+      <span
+        className="navbar-brand mb-0 h1"
+        style={{ cursor: "pointer" }}
+        onClick={() => navigate("/")}
+      >
+        📒 Contact List App
+      </span>
+
+      <button className="btn btn-success" onClick={() => navigate("/add")}>
+        + Agregar Contacto
+      </button>
+    </nav>
+  );
+};
 
 export default Navbar;
