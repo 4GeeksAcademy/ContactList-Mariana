@@ -1,0 +1,11 @@
+const ToastMessage = ({ show, type, message }) => {
+  if (!show) return null;
+
+  return (
+    <div className={`toast-modern toast-${type}`}>
+      {message}
+    </div>
+  );
+};
+
+export default ToastMessage;

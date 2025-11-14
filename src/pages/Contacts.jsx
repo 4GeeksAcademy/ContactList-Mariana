@@ -1,50 +1,44 @@
-// src/pages/Contacts.jsx
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext.jsx";
 import { useNavigate } from "react-router-dom";
 import ContactCard from "../components/ContactCard.jsx";
 
 const Contacts = () => {
-  const { store } = useContext(Context);
-  const { contacts } = store;
-  const [search, setSearch] = useState("");
+  const { store, actions } = useContext(Context);
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
 
-  const filtered = contacts?.filter((c) =>
-    [c.name, c.email, c.phone].some((field) =>
+  useEffect(() => {
+    actions.loadContacts();
+  }, []);
+
+  const filtered = store.contacts.filter(c =>
+    [c.name, c.email, c.phone].some(field =>
       field?.toLowerCase().includes(search.toLowerCase())
     )
   );
 
   return (
     <div className="container py-4">
+      <h1 className="fw-bold text-center mb-4">📒 Contact List</h1>
 
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="fw-bold text-light">📒 Agenda de Contactos</h1>
+      <div className="d-flex justify-content-between mb-4">
+        <input
+          type="text"
+          className="form-control me-3"
+          placeholder="Buscar..."
+          onChange={e => setSearch(e.target.value)}
+        />
 
-        <button
-          className="btn btn-primary shadow-sm px-4"
-          onClick={() => navigate("/add")}
-        >
-          + Nuevo Contacto
+        <button className="btn btn-dark-primary" onClick={() => navigate("/add")}>
+          + Añadir
         </button>
       </div>
 
-      <input
-        type="text"
-        className="form-control mb-4 bg-dark text-light border-secondary"
-        placeholder="🔍 Buscar contacto..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{ padding: "12px", fontSize: "1.1rem" }}
-      />
-
-      {filtered?.length === 0 ? (
+      {filtered.length === 0 ? (
         <p className="text-muted text-center">No hay contactos.</p>
       ) : (
-        filtered.map((contact) => (
-          <ContactCard key={contact.id} contact={contact} />
-        ))
+        filtered.map(c => <ContactCard key={c.id} contact={c} />)
       )}
     </div>
   );

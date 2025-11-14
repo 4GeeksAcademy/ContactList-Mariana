@@ -1,22 +1,31 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const Navbar = () => {
-  const navigate = useNavigate();
-
+const Navbar = ({ theme, onToggleTheme }) => {
   return (
-    <nav className="navbar navbar-dark bg-dark px-4 mb-4">
-      <span
-        className="navbar-brand mb-0 h1"
-        style={{ cursor: "pointer" }}
-        onClick={() => navigate("/")}
-      >
-        📒 Contact List App
-      </span>
+    <nav className="navbar navbar-dark bg-dark px-3 navbar-blur">
+      <div className="d-flex align-items-center gap-2">
+        <span className="navbar-brand fw-bold text-light m-0">
+          📘 Lista de Contactos 
+        </span>
+        <span className="badge bg-gradient-mariana ms-2">
+          by Mariana David
+        </span>
+      </div>
 
-      <button className="btn btn-success" onClick={() => navigate("/add")}>
-        + Agregar Contacto
-      </button>
+      <div className="d-flex align-items-center gap-2">
+        <button
+          type="button"
+          className="btn btn-sm btn-outline-light"
+          onClick={onToggleTheme}
+        >
+          {theme === "dark" ? "☀ Light" : "🌙 Dark"}
+        </button>
+
+        <Link to="/add" className="btn btn-dark-primary btn-sm">
+          + Añadir Contacto
+        </Link>
+      </div>
     </nav>
   );
 };

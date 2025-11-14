@@ -1,63 +1,60 @@
-/* 🌙 DARK MODE GLOBAL */
 body {
-  background: #0d1117 !important;
-  color: #e6edf3 !important;
+  background: #0f0f10;
+  color: #f0f0f0;
   font-family: "Inter", sans-serif;
 }
 
-/* 🔍 Inputs */
-input,
-.form-control {
-  background-color: #161b22 !important;
-  border: 1px solid #30363d !important;
-  color: #e6edf3 !important;
-}
-
-input::placeholder {
-  color: #7d8590 !important;
-}
-
-/* 📦 Card estilo moderno */
+/* CARDS */
 .dark-card {
-  background: rgba(22, 27, 34, 0.85) !important;
-  border: 1px solid #30363d !important;
-  border-radius: 15px;
+  background: #1a1b1e;
+  border: 1px solid #2a2c30;
   padding: 20px;
-  backdrop-filter: blur(6px);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 14px;
 }
 
-.dark-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0px 4px 20px rgba(0, 200, 255, 0.1);
-}
-
-/* 🖼 Avatar redondo */
+/* AVATAR */
 .avatar-lg {
-  width: 75px;
-  height: 75px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #58a6ff;
+  width: 70px;
+  height: 70px;
+  border-radius: 12px;
 }
 
-/* 🔘 Botones */
+/* BUTTON */
 .btn-dark-primary {
-  background: #238636 !important;
+  background: linear-gradient(135deg, #8a63ff, #5a3cd9);
+  color: white;
   border: none;
+  border-radius: 10px;
 }
 
-.btn-dark-secondary {
-  background: #30363d !important;
-  border: none;
+/* MODAL */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* ⭐ Iconos */
-.icon {
-  color: #58a6ff !important;
+.modal-custom {
+  background: #1e1f23;
+  padding: 25px;
+  border-radius: 16px;
+  color: white;
 }
 
-/* 🧹 separadores */
-hr {
-  border-color: #21262d;
+/* TOAST */
+.toast-modern {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
 }
+
+.toast-success { background: #2ea043; }
+.toast-info { background: #58a6ff; }
+.toast-danger { background: #ff4d4d; }
