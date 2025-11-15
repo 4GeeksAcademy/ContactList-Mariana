@@ -29,9 +29,13 @@ const AddContact = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if (editing) actions.editContact(id, contact);
-    else actions.addContact(contact);
+    if (editing) {
+      await actions.editContact(id, contact);
+    } else {
+      await actions.addContact(contact);
+    }
 
+    // navegamos cuando ya terminó la petición
     navigate("/");
   };
 
@@ -41,7 +45,11 @@ const AddContact = () => {
         {editing ? "Editar Contacto" : "Nuevo Contacto"}
       </h2>
 
-      <form className="dark-card mx-auto" style={{ maxWidth: "600px" }} onSubmit={handleSubmit}>
+      <form
+        className="dark-card mx-auto"
+        style={{ maxWidth: "600px" }}
+        onSubmit={handleSubmit}
+      >
         {["name", "email", "phone", "address"].map(field => (
           <div className="mb-3" key={field}>
             <label className="form-label text-capitalize">{field}</label>
@@ -61,7 +69,11 @@ const AddContact = () => {
             {editing ? "Guardar Cambios" : "Crear Contacto"}
           </button>
 
-          <button className="btn btn-secondary" type="button" onClick={() => navigate("/")}>
+          <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={() => navigate("/")}
+          >
             Cancelar
           </button>
         </div>

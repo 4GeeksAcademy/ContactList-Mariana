@@ -8,8 +8,10 @@ const Contacts = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
+  // 👉 SOLO CARGA CONTACTOS UNA VEZ
   useEffect(() => {
     actions.loadContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filtered = store.contacts.filter(c =>
@@ -20,7 +22,7 @@ const Contacts = () => {
 
   return (
     <div className="container py-4">
-      <h1 className="fw-bold text-center mb-4">📒 Contact List</h1>
+      <h1 className="fw-bold text-center mb-4">📒 Lista de Contactos</h1>
 
       <div className="d-flex justify-content-between mb-4">
         <input
@@ -30,7 +32,10 @@ const Contacts = () => {
           onChange={e => setSearch(e.target.value)}
         />
 
-        <button className="btn btn-dark-primary" onClick={() => navigate("/add")}>
+        <button
+          className="btn btn-dark-primary"
+          onClick={() => navigate("/add")}
+        >
           + Añadir
         </button>
       </div>

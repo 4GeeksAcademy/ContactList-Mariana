@@ -1,43 +1,50 @@
+// 📁 src/store/appContext.jsx
 import React, { useState } from "react";
 import getState from "./flux.jsx";
 
+// ⬅️ ESTE ES EL CONTEXTO QUE ESTÁS IMPORTANDO EN TODOS LADOS
 export const Context = React.createContext(null);
 
 const AppContext = ({ children }) => {
+  // ⚙️ Inicializamos el state global usando flux.jsx
   const [state, setState] = useState(
     getState({
       getStore: () => state.store,
       getActions: () => state.actions,
       setStore: updatedStore =>
-        setState({
-          store: { ...state.store, ...updatedStore },
-          actions: { ...state.actions }
-        })
+        setState(prev => ({
+          store: { ...prev.store, ...updatedStore },
+          actions: { ...prev.actions }
+        }))
     })
   );
 
+  const { store, actions } = state;
+
   return (
-    <Context.Provider value={state}>
+    <Context.Provider value={{ store, actions }}>
       {children}
 
-      {/* MODAL */}
-      {state.store.modal.show && (
+      {/* ==========================
+          🔥 MODAL GLOBAL
+      =========================== */}
+      {store.modal.show && (
         <div className="modal-backdrop-custom">
           <div className="modal-custom">
-            <h4 className="mb-3">{state.store.modal.title}</h4>
-            <p className="mb-4">{state.store.modal.message}</p>
+            <h4 className="mb-3">{store.modal.title}</h4>
+            <p className="mb-4">{store.modal.message}</p>
 
             <div className="d-flex justify-content-end gap-3">
               <button
                 className="btn btn-secondary"
-                onClick={state.actions.closeModal}
+                onClick={actions.closeModal}
               >
                 Cancelar
               </button>
 
               <button
                 className="btn btn-danger"
-                onClick={state.store.modal.onConfirm}
+                onClick={store.modal.onConfirm}
               >
                 Confirmar
               </button>
@@ -46,10 +53,12 @@ const AppContext = ({ children }) => {
         </div>
       )}
 
-      {/* TOAST */}
-      {state.store.toast.show && (
-        <div className={`toast-modern toast-${state.store.toast.type}`}>
-          {state.store.toast.message}
+      {/* ==========================
+          🔥 TOAST GLOBAL
+      =========================== */}
+      {store.toast.show && (
+        <div className={`toast-modern toast-${store.toast.type}`}>
+          {store.toast.message}
         </div>
       )}
     </Context.Provider>

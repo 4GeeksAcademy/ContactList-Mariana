@@ -6,81 +6,105 @@ const getState = ({ getStore, getActions, setStore }) => {
     store: {
       contacts: [],
 
-      toast: { show: false, message: "", type: "success" },
+      toast: {
+        show: false,
+        message: "",
+        type: "success",
+      },
 
       modal: {
         show: false,
         title: "",
         message: "",
-        onConfirm: null
-      }
+        onConfirm: null,
+      },
     },
 
     actions: {
-      // ==========================
+      // ==========================================
       // TOAST
-      // ==========================
+      // ==========================================
       showToast: (message, type = "success") => {
+        const store = getStore();
+
         setStore({
-          ...getStore(),
-          toast: { show: true, message, type }
+          ...store,
+          toast: { show: true, message, type },
         });
 
         setTimeout(() => {
+          const storeNow = getStore();
           setStore({
-            ...getStore(),
-            toast: { show: false, message: "", type: "success" }
+            ...storeNow,
+            toast: { show: false, message: "", type: "success" },
           });
-        }, 2000);
+        }, 3000);
       },
 
-      // ==========================
+      // ==========================================
       // MODAL
-      // ==========================
+      // ==========================================
       openModal: (title, message, onConfirm) => {
+        const store = getStore();
+
         setStore({
-          ...getStore(),
-          modal: { show: true, title, message, onConfirm }
+          ...store,
+          modal: { show: true, title, message, onConfirm },
         });
       },
 
       closeModal: () => {
+        const store = getStore();
+
         setStore({
-          ...getStore(),
-          modal: { show: false, title: "", message: "", onConfirm: null }
+          ...store,
+          modal: { show: false, title: "", message: "", onConfirm: null },
         });
       },
 
-      // ==========================
-      // CONTACTOS
-      // ==========================
+      // ==========================================
+      // CARGAR CONTACTOS
+      // ==========================================
       loadContacts: async () => {
         try {
           const resp = await fetch(`${BASE_URL}/agendas/${AGENDA}`);
           const data = await resp.json();
-          setStore({ contacts: data.contacts || [] });
+
+          setStore({
+            ...getStore(),
+            contacts: data.contacts || [],
+          });
         } catch (err) {
           console.error("Error loading contacts:", err);
         }
       },
 
-      addContact: async contact => {
+      // ==========================================
+      // AGREGAR
+      // ==========================================
+      addContact: async (contact) => {
         try {
-          const resp = await fetch(`${BASE_URL}/agendas/${AGENDA}/contacts`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(contact)
-          });
+          const resp = await fetch(
+            `${BASE_URL}/agendas/${AGENDA}/contacts`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(contact),
+            }
+          );
 
-          if (!resp.ok) throw new Error("Error adding contact");
+          if (!resp.ok) throw new Error("Error adding");
 
-          getActions().loadContacts();
+          await getActions().loadContacts();
           getActions().showToast("Contacto agregado", "success");
         } catch (err) {
           console.error(err);
         }
       },
 
+      // ==========================================
+      // EDITAR
+      // ==========================================
       editContact: async (id, contact) => {
         try {
           const resp = await fetch(
@@ -88,24 +112,33 @@ const getState = ({ getStore, getActions, setStore }) => {
             {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(contact)
+              body: JSON.stringify(contact),
             }
           );
 
-          if (!resp.ok) throw new Error("Error editing contact");
+          if (!resp.ok) throw new Error("Error editing");
 
-          getActions().loadContacts();
+          await getActions().loadContacts();
           getActions().showToast("Contacto actualizado", "info");
         } catch (err) {
           console.error(err);
         }
       },
 
-      deleteContact: id => {
-        getActions().openModal(
-          "Eliminar contacto",
+      // ==========================================
+      // ELIMINAR CONTACTO FINAL
+      // ==========================================
+      deleteContact: (id) => {
+        const actions = getActions();
+
+        actions.openModal(
+          "Eliminar Contacto",
           "¿Estás segura que deseas eliminar este contacto?",
           async () => {
+            actions.closeModal();
+
+            await new Promise((r) => setTimeout(r, 200));
+
             try {
               const resp = await fetch(
                 `${BASE_URL}/agendas/${AGENDA}/contacts/${id}`,
@@ -114,17 +147,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 
               if (!resp.ok) throw new Error("Error deleting");
 
-              getActions().loadContacts();
-              getActions().showToast("Contacto eliminado", "danger");
+              await actions.loadContacts();
+              actions.showToast("Contacto eliminado", "danger");
             } catch (err) {
               console.error(err);
+              actions.showToast("Error al eliminar", "danger");
             }
-
-            getActions().closeModal();
           }
         );
-      }
-    }
+      },
+    },
   };
 };
 
