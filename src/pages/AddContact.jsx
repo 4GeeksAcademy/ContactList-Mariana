@@ -9,7 +9,7 @@ const AddContact = () => {
   const editing = !!id;
 
   const [contact, setContact] = useState({
-    name: "",
+    full_name: "", 
     email: "",
     phone: "",
     address: ""
@@ -18,7 +18,16 @@ const AddContact = () => {
   useEffect(() => {
     if (editing && store.contacts.length > 0) {
       const found = store.contacts.find(c => c.id === parseInt(id));
-      if (found) setContact(found);
+      
+      if (found) {
+        
+        setContact({
+            full_name: found.name, 
+            email: found.email,
+            phone: found.phone,
+            address: found.address,
+        });
+      }
     }
   }, [editing, id, store.contacts]);
 
@@ -31,12 +40,13 @@ const AddContact = () => {
 
     if (editing) {
       await actions.editContact(id, contact);
+     
+      window.location.href = "/"; 
     } else {
-      await actions.addContact(contact);
+      await actions.addContact(contact); 
+     
+      window.location.href = "/";
     }
-
-    // navegamos cuando ya terminó la petición
-    navigate("/");
   };
 
   return (
@@ -50,9 +60,10 @@ const AddContact = () => {
         style={{ maxWidth: "600px" }}
         onSubmit={handleSubmit}
       >
-        {["name", "email", "phone", "address"].map(field => (
+      
+        {["full_name", "email", "phone", "address"].map(field => (
           <div className="mb-3" key={field}>
-            <label className="form-label text-capitalize">{field}</label>
+            <label className="form-label text-capitalize">{field.replace('_', ' ')}</label>
             <input
               type="text"
               name={field}
@@ -68,7 +79,7 @@ const AddContact = () => {
           <button className="btn btn-dark-primary" type="submit">
             {editing ? "Guardar Cambios" : "Crear Contacto"}
           </button>
-
+          
           <button
             className="btn btn-secondary"
             type="button"

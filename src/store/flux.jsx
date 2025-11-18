@@ -1,5 +1,5 @@
 const BASE_URL = "https://playground.4geeks.com/contact";
-const AGENDA = "agendaMariana";
+const AGENDA = "agendaMarianaFinal"; // Agenda limpia y funcional
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -21,53 +21,30 @@ const getState = ({ getStore, getActions, setStore }) => {
     },
 
     actions: {
-      // ==========================================
-      // TOAST
-      // ==========================================
+    
       showToast: (message, type = "success") => {
         const store = getStore();
-
-        setStore({
-          ...store,
-          toast: { show: true, message, type },
-        });
-
+        setStore({ ...store, toast: { show: true, message, type } });
         setTimeout(() => {
           const storeNow = getStore();
-          setStore({
-            ...storeNow,
-            toast: { show: false, message: "", type: "success" },
-          });
+          setStore({ ...storeNow, toast: { show: false, message: "", type: "success" } });
         }, 3000);
       },
 
-      // ==========================================
-      // MODAL
-      // ==========================================
       openModal: (title, message, onConfirm) => {
         const store = getStore();
-
-        setStore({
-          ...store,
-          modal: { show: true, title, message, onConfirm },
-        });
+        setStore({ ...store, modal: { show: true, title, message, onConfirm } });
       },
 
       closeModal: () => {
         const store = getStore();
-
-        setStore({
-          ...store,
-          modal: { show: false, title: "", message: "", onConfirm: null },
-        });
+        setStore({ ...store, modal: { show: false, title: "", message: "", onConfirm: null } });
       },
 
-      // ==========================================
-      // CARGAR CONTACTOS
-      // ==========================================
+     
       loadContacts: async () => {
         try {
-          const resp = await fetch(`${BASE_URL}/agendas/${AGENDA}`);
+          const resp = await fetch(`${BASE_URL}/agendas/${AGENDA}/contacts`);
           const data = await resp.json();
 
           setStore({
@@ -79,55 +56,79 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      // ==========================================
-      // AGREGAR
-      // ==========================================
+    
       addContact: async (contact) => {
+        const actions = getActions();
         try {
+        
+          const contactToSend = {
+              name: contact.full_name, 
+              email: contact.email,
+              phone: contact.phone,
+              address: contact.address,
+              agenda_slug: AGENDA 
+          };
+            
           const resp = await fetch(
             `${BASE_URL}/agendas/${AGENDA}/contacts`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(contact),
+              body: JSON.stringify(contactToSend),
             }
           );
 
-          if (!resp.ok) throw new Error("Error adding");
+          if (!resp.ok) {
+            const errorData = await resp.json();
+            console.error("Error del servidor al agregar:", errorData);
+            throw new Error(`Error adding contact. ${errorData.message || 'Verifica que todos los campos estén llenos.'}`);
+          }
 
-          await getActions().loadContacts();
-          getActions().showToast("Contacto agregado", "success");
+          
+          await actions.loadContacts(); 
+          
+        
+          actions.showToast("Contacto agregado", "success");
+
+          
+          await new Promise(r => setTimeout(r, 1500)); 
+          
         } catch (err) {
-          console.error(err);
+          console.error("Error al agregar contacto:", err);
+          actions.showToast("Error al crear contacto", "danger");
         }
       },
 
-      // ==========================================
-      // EDITAR
-      // ==========================================
+     
       editContact: async (id, contact) => {
         try {
+          const contactToSend = {
+              name: contact.full_name, 
+              email: contact.email,
+              phone: contact.phone,
+              address: contact.address
+          };
+
           const resp = await fetch(
             `${BASE_URL}/agendas/${AGENDA}/contacts/${id}`,
             {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(contact),
+              body: JSON.stringify(contactToSend),
             }
           );
 
-          if (!resp.ok) throw new Error("Error editing");
+          if (!resp.ok) throw new Error("Error editing contact. Status: " + resp.status);
 
           await getActions().loadContacts();
           getActions().showToast("Contacto actualizado", "info");
         } catch (err) {
           console.error(err);
+          getActions().showToast("Error al editar contacto", "danger");
         }
       },
 
-      // ==========================================
-      // ELIMINAR CONTACTO FINAL
-      // ==========================================
+     
       deleteContact: (id) => {
         const actions = getActions();
 
@@ -136,19 +137,29 @@ const getState = ({ getStore, getActions, setStore }) => {
           "¿Estás segura que deseas eliminar este contacto?",
           async () => {
             actions.closeModal();
-
             await new Promise((r) => setTimeout(r, 200));
 
             try {
+              
               const resp = await fetch(
-                `${BASE_URL}/agendas/${AGENDA}/contacts/${id}`,
+                `${BASE_URL}/agendas/${AGENDA}/contacts/${id}`, 
                 { method: "DELETE" }
               );
 
-              if (!resp.ok) throw new Error("Error deleting");
+              if (!resp.ok) {
+                const errorText = await resp.text();
+                console.error("Error del servidor al intentar eliminar:", errorText);
+                throw new Error(`Error deleting contact. Status: ${resp.status}`);
+              }
+
+             
+              actions.showToast("Contacto eliminado", "danger");
+              
+              
+              await new Promise(r => setTimeout(r, 500)); 
 
               await actions.loadContacts();
-              actions.showToast("Contacto eliminado", "danger");
+              
             } catch (err) {
               console.error(err);
               actions.showToast("Error al eliminar", "danger");

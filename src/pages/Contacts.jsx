@@ -8,7 +8,7 @@ const Contacts = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  // 👉 SOLO CARGA CONTACTOS UNA VEZ
+
   useEffect(() => {
     actions.loadContacts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
